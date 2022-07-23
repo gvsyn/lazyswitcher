@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family={{mainTextFontName}}:{{mainTextFontWeight}}');
+* {
+    font-family: 'Montserrat', sans-serif;
+    color: black;
+    font-size: 20pt;
+    overflow: hidden;
+}
+
+#bitbox {
+  	position: absolute;
+   	margin: 0 auto;
+    padding: auto;
+  	top: {{mainTextfontHeight}}%;
+	z-index: 3;
+  	font-family: '{{mainTextFontName}}', sans-serif;
+   	font-weight: {{mainTextFontWeight}};
+  	color: {{mainTextColor}}; /* Top Color */
+	text-align: center;
+	font-size: {{mainTextFontSize}}px;
+    text-shadow: rgb(0, 0, 0) 1px 1px 1px;
+/*  	text-shadow: 0 0 8px #000000; */
+	background-size: cover;
+    width: 100%;
+    overflow: hidden;
+}
+
+#pseudolog {
+  color: #fff;
+  font-size: 40px;
+  font-famile: '{{mainTextFontName}}';
+}

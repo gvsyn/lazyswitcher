@@ -1,0 +1,79 @@
+{
+  "ingestHost": {
+    "type": "text",
+    "label": "Ingest",
+    "value": "",
+    "group": "Stream Check"
+  },
+  "srtPublisher": {
+    "type": "text",
+    "label": "Publisher",
+    "value": "",
+    "group": "Stream Check"
+  },
+  "starting": {
+    "type": "text",
+    "label": "Starting",
+    "value": "",
+    "group": "Scenes"
+  },
+  "live": {
+    "type": "text",
+    "label": "Live",
+    "value": "",
+    "group": "Scenes"
+  },
+  "brb": {
+    "type": "text",
+    "label": "BRB",
+    "value": "",
+    "group": "Scenes"
+  },
+  "privacy": {
+    "type": "text",
+    "label": "Privacy",
+    "value": "",
+    "group": "Scenes"
+  },
+  "mainTextFontName": {
+    "type": "googleFont",    
+    "label": "Main Text Font name",
+    "value": "",
+    "group":"Font"
+  },
+  "mainTextFontSize": {
+    "type": "number",
+    "label": "Main Text Font size",
+    "value": 14,
+    "group":"Font"
+  },
+  "mainTextFontWeight": {
+    "label": "Font Weight",
+    "type": "dropdown",
+    "value": "400",
+    "options": {
+      "100": "Thin (100)",
+      "300": "Light (300)",
+      "400": "Regular (400)",
+      "500": "Medium (500)",
+      "700": "Bold (700)",
+      "900": "Black (900)"
+    },
+    "group":"Font"
+  },
+  "mainTextfontHeight": {
+    "type": "slider",
+    "label": "Height of the top text (%)",
+    "value": 1,
+    "min": 1,
+    "max": 100,
+    "steps": 1,
+    "group":"Font"
+  },
+  "mainTextColor": {
+    "type": "colorpicker",
+    "label": "Main Text Color",
+    "value": "#eeeeee",
+    "group":"Font"
+  }
+}
