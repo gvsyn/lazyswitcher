@@ -1,6 +1,6 @@
 var streamingStatus = false;
 var currentScene = '';
-
+var antiflap = 0;
 
 window.addEventListener('onWidgetLoad', function (obj) {
   fieldData = obj.detail.fieldData;
@@ -62,10 +62,14 @@ async function getStats(fieldData) {
       timeout: 2000
     });
     const ingest = await response.json();
-    if (ingest.status === "error" && currentScene !== fieldData.starting && currentScene !== fieldData.privacy) {
+	if (antiflap < 20) {
+		antiflap++;
+	}
+	if (ingest.status === "error" && currentScene !== fieldData.starting && currentScene !== fieldData.privacy) {
       document.querySelector("#bitbox").innerHTML = "offline";
     } else if (streamingStatus) {
-        if (ingest.bitrate >= 200 && ingest.rtt < 4000) {
+        if (ingest.bitrate >= 350 && ingest.rtt < 5000 && antiflap > 9) {
+          antiflap = antiflap - 8;
           setScene(fieldData.live);
         } else if (currentScene === fieldData.live) {
           setScene(fieldData.brb);
