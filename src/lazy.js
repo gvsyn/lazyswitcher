@@ -62,14 +62,11 @@ async function getStats(fieldData) {
       timeout: 2000
     });
     const ingest = await response.json();
-	if (antiflap < 20) {
-		antiflap++;
-	}
-	if (ingest.status === "error" && currentScene !== fieldData.starting && currentScene !== fieldData.privacy) {
+	
+    if (ingest.status === "error" && currentScene !== fieldData.starting && currentScene !== fieldData.privacy) {
       document.querySelector("#bitbox").innerHTML = "offline";
     } else if (streamingStatus) {
-        if (ingest.bitrate >= 350 && ingest.rtt < 5000 && antiflap > 9) {
-          antiflap = antiflap - 8;
+        if (ingest.bitrate >= 300 && ingest.rtt < 5000) {
           setScene(fieldData.live);
         } else if (currentScene === fieldData.live) {
           setScene(fieldData.brb);
