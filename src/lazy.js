@@ -5,18 +5,17 @@ var currentScene = '';
 
 window.addEventListener('onWidgetLoad', function (obj) {
   fieldData = obj.detail.fieldData;
-  // A complete example
-try {
-  const {
-    obsWebSocketVersion,
-    negotiatedRpcVersion
-  } = obs.connect('ws://127.0.0.1:4455', undefined, {
-    rpcVersion: 1
-  });
-  console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
-} catch (error) {
-  console.error('Failed to connect ',error.code, error.message);
-}
+  try {
+    const {
+      obsWebSocketVersion,
+      negotiatedRpcVersion
+    } = obs.connect('ws://127.0.0.1:4455', undefined, {
+      rpcVersion: 1
+    });
+    craplog(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
+  } catch (error) {
+    craplog('Failed to connect ',error.code, error.message);
+  }
 
   setInterval(function() {
     getStats(fieldData);
@@ -24,7 +23,9 @@ try {
   
 });
 
-
+function craplog(message) {
+  document.querySelector("#pseudolog").innerHTML = message;
+}
 
 function setScene(scene) {
   if (streamingStatus == false || scene == currentScene) {
@@ -57,7 +58,7 @@ async function getStats(fieldData) {
     // use status.recording for testing
     streamingStatus = status.streaming || status.recording;
   });
-    document.querySelector("#pseudolog").innerHTML = `${streamingStatus} ${currentScene}`;
+    craplog(`${streamingStatus} ${currentScene}`);
 
   try {
     const response = await fetchWithTimeout(`https://${fieldData.ingestHost}/stats?publisher=${fieldData.srtPublisher}`, {

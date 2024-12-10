@@ -7,10 +7,10 @@
 }
 
 #bitbox {
-  	position: absolute;
    	margin: 0 auto;
     padding: auto;
-  	top: {{mainTextfontHeight}}%;
+/*  	top: {{mainTextfontHeight}}%;
+  	position: absolute; */
 	z-index: 3;
   	font-family: '{{mainTextFontName}}', sans-serif;
    	font-weight: {{mainTextFontWeight}};
