@@ -1,37 +1,43 @@
 const obs = new OBSWebSocket();
 
+// Declare some events to listen for.
+obs.on('ConnectionOpened', () => {
+  console.log('Connection Opened');
+});
+
+obs.on('Identified', () => {
+  console.log('Identified, good to go!')
+});
+
+obs.connect();
+
 var streamingStatus = false;
 var currentScene = '';
 
 window.addEventListener('onWidgetLoad', function (obj) {
-  fieldData = obj.detail.fieldData;
-  try {
-    const {
-      obsWebSocketVersion,
-      negotiatedRpcVersion
-    } = obs.connect('ws://127.0.0.1:4455', undefined, {
-      rpcVersion: 1
-    });
-    craplog(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`);
-  } catch (error) {
-    craplog('Failed to connect ',error.code, error.message);
-  }
-
-  setInterval(function() {
-    getStats(fieldData);
-  }, 1000);
+fieldData = obj.detail.fieldData;
+	setInterval(function() {
+		getStats(fieldData);
+	}, 1000);
   
 });
 
-function craplog(message) {
-  document.querySelector("#pseudolog").innerHTML = message;
-}
-
-function setScene(scene) {
+async function setScene(scene) {
   if (streamingStatus == false || scene == currentScene) {
     return;
   }
   await obs.call('SetCurrentProgramScene', {sceneName: scene});
+}
+
+async function getScene() {
+	const {scene} = await obs.call('GetCurrentProgramScene');
+	return scene;
+}
+
+async function getStreamOrRecordingStatus() {
+	const streaming = await obs.call('GetStreamStatus');
+	const recording = await obs.call('GetRecordStatus');
+	return streaming.outputActive || recording.outputActive;
 }
 
 async function fetchWithTimeout(resource, options) {
@@ -50,15 +56,9 @@ async function fetchWithTimeout(resource, options) {
 }
 
 async function getStats(fieldData) {
-  window.obsstudio.getCurrentScene(function(scene) {
-    //document.querySelector("#pseudolog").innerHTML(scene)
-    currentScene = scene.name;
-  });
-  window.obsstudio.getStatus(function (status) {
-    // use status.recording for testing
-    streamingStatus = status.streaming || status.recording;
-  });
-    craplog(`${streamingStatus} ${currentScene}`);
+	currentSceneObj = await obs.call('GetCurrentProgramScene');
+	currentScene = currentSceneObj.currentProgramSceneName;
+	streamingStatus = await getStreamOrRecordingStatus();
 
   try {
     const response = await fetchWithTimeout(`https://${fieldData.ingestHost}/stats?publisher=${fieldData.srtPublisher}`, {
@@ -67,7 +67,7 @@ async function getStats(fieldData) {
     const ingest = await response.json();
     if (ingest.status === "error" && currentScene !== fieldData.starting && currentScene !== fieldData.privacy) {
       document.querySelector("#bitbox").innerHTML = "offline";
-    } else if (streamingStatus) {
+    } else if (streamingStatus && (currentScene === fieldData.starting || currentScene === fieldData.brb || currentScene === fieldData.live)) {
         if (ingest.bitrate >= 350 && ingest.rtt < 5000) {
           setScene(fieldData.live);
         } else if (currentScene === fieldData.live) {
